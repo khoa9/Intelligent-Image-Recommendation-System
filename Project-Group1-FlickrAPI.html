@@ -1,0 +1,355 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html><head></head><body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div>
+
+
+
+<h1 class="title toc-ignore"><strong>Intelligent Image Recommendation
+System</strong></h1>
+<h4 class="author"><p>Team Members: - <em>Dang</em> - <em>Bach</em> -
+<em>Khyati</em> - <em>Amruta</em> - <em>Ragini</em></p></h4>
+<h4 class="date">2023-12-05</h4>
+
+</div>
+
+
+
+<div class="section level3">
+<h3>Project Overview</h3>
+<p>Welcome to our innovative project, the <strong>Intelligent Travel
+Recommendation System</strong>. This report highlights our collaborative
+efforts and showcases the advanced features of our intelligent travel
+system.</p>
+</div>
+<div class="section level3">
+<h3>Team Members</h3>
+<p>Meet the creative minds behind this project:</p>
+<ul>
+<li><em>Dang</em></li>
+<li><em>Bach</em></li>
+<li><em>Khyati</em></li>
+<li><em>Amruta</em></li>
+<li><em>Ragini</em></li>
+</ul>
+</div>
+<div class="section level3">
+<h3>Problem Description</h3>
+<p>Our objective is to develop an intelligent image recommendation
+system that harnesses cutting-edge technologies to offer personalized
+and unique suggestions. This project integrates machine learning, image
+classification, and API integration to provide users with a
+sophisticated tool for predicting image classes and retrieving curated
+sets of related images. The developed model demonstrates the potential
+of deep learning in image recognition tasks.</p>
+</div>
+<div class="section level3">
+<h3>Data Collection</h3>
+<p>We meticulously curated diverse and extensive data from Flickr API to
+ensure the robustness of our recommendation system. Access our
+comprehensive dataset from <a rel="noopener" href="https://drive.google.com/file/d/1xQI78UG-BqojbXWs8K0F1xI6KEWkYPDS/view?usp=drive_link">here</a></p>
+<pre class="r"><code>library(keras)
+library(tidyverse)
+
+model_VGG16 &lt;- load_model_hdf5(&quot;VGG_16.h5&quot;)
+history_vgg16 &lt;- readRDS(&quot;history_vgg_16.rds&quot;)
+
+
+model_CNN &lt;- load_model_hdf5(&quot;convNN.h5&quot;)
+history_CNN &lt;- readRDS(&quot;history_convNN.rds&quot;)</code></pre>
+</div>
+<div class="section level3">
+<h3>Data summary, exploration, and discussion</h3>
+<div class="section level4">
+<h4>a. Total pictures</h4>
+<p>The total pictures we downloaded is approximately around 7,000
+pictures (format: .JPG) across 5 categories: city, river, mountain,
+temple, and waterfall. However, we only use 3,000 pictures including
+these natural scenes: city, river, and mountain.</p>
+</div>
+<div class="section level4">
+<h4>b. Reason for changing</h4>
+<p>The reason why we go from building a model that can classify 5
+categories to only classify 3 categories is because we want the model to
+be trained well and have the good accuracy first before expanding to
+more natural scenes. We have conducted several experiments in terms of
+classifying 5 categories the accuracy is only around 50-55% with a lot
+of time invested in training and processing data. Thus, we have decided
+to narrow our classification targets down to three so the model is
+stable and perform well. However, in the future this model is capable of
+classifying more than 3 categories if we have more data and time to
+train it.</p>
+</div>
+</div>
+<div class="section level3">
+<h3>Modelling</h3>
+<p>For this project, we have come up with the ideas of building 2
+models:</p>
+<ul>
+<li><p>CNN</p></li>
+<li><p>VGG16</p></li>
+</ul>
+<div class="section level4">
+<h4>Compare Models</h4>
+<div class="section level5">
+<h5>a. First model (CNN)</h5>
+<p>CNN : For this class of deep neural netwrok, we defined a new convnet
+that includes dropout. Presenting the accuracy and loss graphs
+below.</p>
+<pre class="r"><code>plot(history_CNN)</code></pre>
+<p><img src="javascript://" width="672"/></p>
+</div>
+<div class="section level5">
+<h5>b. Second model (VGG16)</h5>
+<p>For the second model, we utilize the pre-trained model name VGG16 to
+create features and then we define our densely connected classier to
+process data.Here is the the graph which shows the performance of the
+second model.</p>
+<pre class="r"><code>plot(history_vgg16)</code></pre>
+<p><img src="javascript://" width="672"/></p>
+<p>From the graphs, we can clearly see that model2 that utilizes VGG
+show a better performance.And, the performance on train and validation
+test on model2 is good enough for us to finalize it.</p>
+</div>
+</div>
+</div>
+<div class="section level3">
+<h3>Steps to execute the project</h3>
+<p>Steps for executing the project In R Script:</p>
+<ul>
+<li>Download all the files in the submissions</li>
+<li><a rel="noopener" href="https://drive.google.com/file/d/1xQI78UG-BqojbXWs8K0F1xI6KEWkYPDS/view?usp=drive_link">Download
+the data zip file from Google drive</a></li>
+<li>Put all the submitted files and the downloaded zip data file within
+the same directory</li>
+<li>Execute the R Script - Project-Group1-Modelling.R</li>
+</ul>
+</div>
+<div class="section level3">
+<h3>AI/ML procedure summary - VGG16</h3>
+<p>Steps for training our model:</p>
+<ul>
+<li><p>Download the file that has 7,000 pictures from Drive.</p></li>
+<li><p>Restructure the folder as</p>
+<ul>
+<li>flickrdata
+<ul>
+<li>test
+<ul>
+<li>city</li>
+<li>mountain</li>
+<li>river</li>
+</ul></li>
+<li>train
+<ul>
+<li>city</li>
+<li>mountain</li>
+<li>river</li>
+</ul></li>
+<li>valid
+<ul>
+<li>city</li>
+<li>mountain</li>
+<li>river</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><p>Copy the images into subsequent named folders</p></li>
+<li><p>With current implementation , we have 900 pictures for each
+category: 600 for training, 200 for validation, and 100 for
+testing.</p></li>
+<li><p>We run a VGG16 over our dataset and collect the output
+features.</p></li>
+<li><p>Next, we define our densely connected classier and train it on
+the data and labels that we just recorded.</p></li>
+<li><p>Fitting the processed training and validation data into the model
+is the last step.</p></li>
+</ul>
+</div>
+<div class="section level3">
+<h3>AI/ML result summary - VGG16</h3>
+<ul>
+<li>VGG16 is one of the pre-trained image classification models in
+keras.</li>
+</ul>
+<div class="section level4">
+<h4>Summary</h4>
+<pre class="r"><code>summary(model_VGG16)</code></pre>
+<pre><code>## Model: &quot;sequential_1&quot;
+## ________________________________________________________________________________
+##  Layer (type)                       Output Shape                    Param #     
+## ================================================================================
+##  dense_6 (Dense)                    (None, 256)                     2097408     
+##  dropout_4 (Dropout)                (None, 256)                     0           
+##  dense_5 (Dense)                    (None, 128)                     32896       
+##  dropout_3 (Dropout)                (None, 128)                     0           
+##  dense_4 (Dense)                    (None, 64)                      8256        
+##  dropout_2 (Dropout)                (None, 64)                      0           
+##  dense_3 (Dense)                    (None, 3)                       195         
+## ================================================================================
+## Total params: 2,138,755
+## Trainable params: 2,138,755
+## Non-trainable params: 0
+## ________________________________________________________________________________</code></pre>
+<pre class="r"><code>test &lt;- readRDS(&quot;test.rds&quot;)
+model_VGG16 |&gt; evaluate(test$features, test$labels)</code></pre>
+<pre><code>## 
+##  1/10 [==&gt;...........................] - ETA: 2s - loss: 0.4288 - categorical_accuracy: 0.8125
+## 10/10 [==============================] - 0s 6ms/step - loss: 0.5002 - categorical_accuracy: 0.7867</code></pre>
+<pre><code>##                 loss categorical_accuracy 
+##            0.5002492            0.7866667</code></pre>
+</div>
+<div class="section level4">
+<h4>Observations :</h4>
+<ul>
+<li>The VGG16 improves the accuracy to ~82% which is considered to be
+good for image classification model.</li>
+<li>The better performance of fine-tuning the VGG16 and training a CNN
+from scratch is visible.</li>
+<li>Since VGG16 has already learned meaningful representations, the
+model did converge faster during fine-tuning.</li>
+<li>As the project has its own classification data we do not use the top
+layer of VGG16. However, extracting features can be quite a challenge to
+format it the way last dense layer would require.</li>
+<li>Due to the quality and quantity of data, we get varied results for
+this project and the model slightly overfits the training data.</li>
+</ul>
+</div>
+</div>
+<div class="section level3">
+<h3>Test</h3>
+<p>This section explains the testing procedure for the image
+classification</p>
+<ol style="list-style-type: decimal;">
+<li><strong>Get the First Image in the Test Folder (Before
+Processing):</strong>
+<ul>
+<li>The order of images to be retrieved will follow the order of
+subfolders and files within each subfolder. We retrieve the first image
+for our prediction.</li>
+<li>This step is crucial for checking the original image and verifying
+its label before any processing or prediction.</li>
+</ul></li>
+<li><strong>Predicting the First Image Using VGG16 model:</strong>
+<ul>
+<li>After training the convolutional neural network (CNN) model
+(<code>model</code>), the predictions (<code>predictions</code>) are
+printed, and the predicted class label is identified
+(<code>predicted_class</code>).</li>
+<li>The predicted class label is then printed using
+<code>class_labels</code>.</li>
+</ul></li>
+<li><strong>Make the API Call (Recall the API) to Ensure Model and Query
+Are Functioning Correctly:</strong>
+<ul>
+<li>The Flickr API is called using the <code>call_flickr_api</code>
+function with the predicted class label (e.g., “beaches”).</li>
+<li>The API response (<code>flickr_response</code>) is printed to ensure
+successful communication with the API and verify that the classification
+model and the constructed API query are functioning correctly. The
+response contains information about photos related to the predicted
+class.</li>
+</ul></li>
+</ol>
+<p>These tests collectively validate the functionality and performance
+of the image classification model, demonstrating its ability to predict
+classes, make API calls, and retrieve relevant images based on
+predictions.</p>
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script type="module" src="https://s.brightspace.com/lib/bsi/20.23.11-218/unbundled/mathjax.js"></script><script type="text/javascript">document.addEventListener('DOMContentLoaded', function() {
+					if (document.querySelector('math') || /\$\$|\\\(|\\\[|\\begin{|\\ref{|\\eqref{/.test(document.body.innerHTML)) {
+						document.querySelectorAll('mspace[linebreak="newline"]').forEach(elm => {
+							elm.setAttribute('style', 'display: block; height: 0.5rem;');
+						});
+
+						window.D2L.MathJax.loadMathJax({
+							'outputScale': 1.5,
+							'renderLatex': false
+						});
+					}
+				});</script><script type="module" src="https://s.brightspace.com/lib/bsi/20.23.11-218/unbundled/prism.js"></script><script type="text/javascript">document.addEventListener('DOMContentLoaded', function() {
+					document.querySelectorAll('.d2l-code').forEach(code => {
+						window.D2L.Prism.formatCodeElement(code);
+					});
+				});</script></body></html>

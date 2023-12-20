@@ -1,0 +1,193 @@
+---
+title: "Group-1-Project report"
+author: "Ragini Mallikarjun Jakkam"
+date: "2023-12-05"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+---
+title: "**Intelligent Image Recommendation System**"
+author: |
+  Team Members:
+  - *Dang*
+  - *Bach*
+  - *Khyati*
+  - *Amruta*
+  - *Ragini*
+output:
+  html_document:
+    theme: cosmo
+    highlight: kate
+---
+
+<style>
+  h1 {
+    color: #007bff; /* Blue color for H1 */
+  }
+
+  h2 {
+    color: #28a745; /* Green color for H2 */
+  }
+</style>
+
+### Project Overview
+
+Welcome to our innovative project, the **Intelligent Travel Recommendation System**. This report highlights our collaborative efforts and showcases the advanced features of our intelligent travel system.
+
+### Team Members
+
+Meet the creative minds behind this project:
+
+- *Dang*
+- *Bach*
+- *Khyati*
+- *Amruta*
+- *Ragini*
+
+### Problem Description
+
+Our objective is to develop an intelligent image recommendation system that harnesses cutting-edge technologies to offer personalized and unique suggestions. This project integrates machine learning, image classification, and API integration to provide users with a sophisticated tool for predicting image classes and retrieving curated sets of related images. The developed model demonstrates the potential of deep learning in image recognition tasks.
+
+### Data Collection
+
+We meticulously curated diverse and extensive data from Flickr API to ensure the robustness of our recommendation system. Access our comprehensive dataset from  [here](https://drive.google.com/file/d/1xQI78UG-BqojbXWs8K0F1xI6KEWkYPDS/view?usp=drive_link)
+
+
+```{r message=FALSE , warning=FALSE}
+
+library(keras)
+library(tidyverse)
+
+model_VGG16 <- load_model_hdf5("VGG_16.h5")
+history_vgg16 <- readRDS("history_vgg_16.rds")
+
+
+model_CNN <- load_model_hdf5("convNN.h5")
+history_CNN <- readRDS("history_convNN.rds")
+
+```
+
+### Data summary, exploration, and discussion 
+#### a. Total pictures
+
+The total pictures we downloaded is approximately around 7,000 pictures (format: .JPG) across 5 categories: city, river, mountain, temple, and waterfall. However, we only use 3,000 pictures including these natural scenes: city, river, and mountain.
+
+#### b. Reason for changing
+
+The reason why we go from building a model that can classify 5 categories to only classify 3 categories is because we want the model to be trained well and have the good accuracy first before expanding to more natural scenes. We have conducted several experiments in terms of classifying 5 categories the accuracy is only around 50-55% with a lot of time invested in training and processing data. Thus, we have decided to narrow our classification targets down to three so the model is stable and perform well. However, in the future this model is capable of classifying more than 3 categories if we have more data and time to train it.
+
+### Modelling
+
+For this project, we have come up with the ideas of building 2 models:
+
+  - CNN
+  
+  - VGG16
+
+#### Compare Models
+
+##### a. First model (CNN)
+
+CNN : For this class of deep neural netwrok, we defined a new convnet that includes dropout. Presenting the accuracy and loss graphs below.
+
+```{r message=FALSE , warning=FALSE}
+plot(history_CNN)
+```
+
+##### b. Second model (VGG16)
+
+For the second model, we utilize the pre-trained model name VGG16 to create features and then we define our densely connected classier to process data.Here is the the graph  which shows the performance of the second model.
+
+```{r message=FALSE , warning=FALSE}
+plot(history_vgg16)
+```
+
+From the graphs, we can clearly see that model2 that utilizes VGG show a better performance.And, the performance on train and validation test on model2 is good enough for us to finalize it. 
+
+### Steps to execute the project
+Steps for executing the project In R Script:
+
+  - Download all the files in the submissions
+  - [Download the data zip file from Google drive](https://drive.google.com/file/d/1xQI78UG-BqojbXWs8K0F1xI6KEWkYPDS/view?usp=drive_link)
+  - Put all the submitted files and the downloaded zip data file within the same directory
+  - Execute the R Script - Project-Group1-Modelling.R
+
+### AI/ML procedure summary - VGG16
+
+Steps for training our model:
+
+  - Download the file that has 7,000 pictures from Drive.
+  - Restructure the folder as 
+  
+    - flickrdata
+      - test
+        - city
+        - mountain
+        - river
+        
+      - train
+        - city
+        - mountain
+        - river
+        
+      - valid
+        - city
+        - mountain
+        - river
+  
+  - Copy the images into subsequent named folders 
+  - With current implementation , we have 900 pictures for each category: 600 for training, 200 for validation, and 100 for testing.
+  - We run a VGG16 over our dataset and collect the output features. 
+  
+  - Next, we define our densely connected classier and train it on the data and labels that we just recorded.
+  
+  - Fitting the processed training and validation data into the model is the last step. 
+
+
+### AI/ML result summary - VGG16
+
+- VGG16 is one of the pre-trained image classification models in keras.
+
+#### Summary
+
+```{r}
+summary(model_VGG16)
+test <- readRDS("test.rds")
+model_VGG16 |> evaluate(test$features, test$labels)
+
+```
+
+#### Observations : 
+
+- The VGG16 improves the accuracy to ~82% which is considered to be good for image classification model. 
+- The better performance of fine-tuning the VGG16 and training a CNN from scratch is visible.
+- Since VGG16 has already learned meaningful representations, the model did converge faster during fine-tuning. 
+- As the project has its own classification data we do not use the top layer of VGG16. However, extracting features can be quite a challenge to format it the way last dense layer would require.
+- Due to the quality and quantity of data, we get varied results for this project and the model slightly overfits the training data.
+
+### Test
+
+This section explains the testing procedure for the image classification
+
+1. **Get the First Image in the Test Folder (Before Processing):**
+   - The order of images to be retrieved will follow the order of subfolders and files within each subfolder. We retrieve the first image for our prediction.
+   - This step is crucial for checking the original image and verifying its label before any processing or prediction.
+
+2. **Predicting the First Image Using VGG16 model:**
+   - After training the convolutional neural network (CNN) model (`model`), the predictions (`predictions`) are printed, and the predicted class label is identified (`predicted_class`).
+   - The predicted class label is then printed using `class_labels`.
+
+3. **Make the API Call (Recall the API) to Ensure Model and Query Are Functioning Correctly:**
+   - The Flickr API is called using the `call_flickr_api` function with the predicted class label (e.g., "beaches").
+   - The API response (`flickr_response`) is printed to ensure successful communication with the API and verify that the classification model and the constructed API query are functioning correctly. The response contains information about photos related to the predicted class.
+
+These tests collectively validate the functionality and performance of the image classification model, demonstrating its ability to predict classes, make API calls, and retrieve relevant images based on predictions.
+
+
+
+
+
